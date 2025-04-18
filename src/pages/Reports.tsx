@@ -98,7 +98,7 @@ const Reports: React.FC = () => {
   const [activeTab, setActiveTab] = useState('my-reports');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filterTag, setFilterTag] = useState<string>('');
+  const [filterTag, setFilterTag] = useState<string | null>(null);
 
   // タグの一覧を取得
   const allTags = useMemo(() => {
@@ -172,7 +172,7 @@ const Reports: React.FC = () => {
         </div>
         
         <div className="flex gap-2">
-          <Select value={filterTag} onValueChange={setFilterTag}>
+          <Select value={filterTag || undefined} onValueChange={setFilterTag}>
             <SelectTrigger className="w-[180px]">
               <div className="flex items-center">
                 <Filter className="h-4 w-4 mr-2" />
@@ -180,7 +180,7 @@ const Reports: React.FC = () => {
               </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">すべてのタグ</SelectItem>
+              <SelectItem value="all">すべてのタグ</SelectItem>
               {allTags.map(tag => (
                 <SelectItem key={tag} value={tag}>{tag}</SelectItem>
               ))}
