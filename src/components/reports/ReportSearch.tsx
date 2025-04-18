@@ -45,10 +45,7 @@ const ReportSearch: React.FC<ReportSearchProps> = ({
           <SelectTrigger className="w-[180px]">
             <div className="flex items-center">
               <Filter className="h-4 w-4 mr-2" />
-              <span>
-                {statusFilter === 'all' ? 'すべて' : 
-                 statusFilter === 'read' ? '既読' : '未読'}
-              </span>
+              <SelectValue placeholder="ステータス" />
             </div>
           </SelectTrigger>
           <SelectContent>

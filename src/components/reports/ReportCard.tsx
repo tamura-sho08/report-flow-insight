@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { FileText, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -13,7 +12,6 @@ export interface Report {
   content: string;
   hasFeedback: boolean;
   isRead: boolean;
-  tags?: string[];
 }
 
 interface ReportCardProps {
@@ -40,14 +38,6 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, className }) => {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground line-clamp-2">{report.content}</p>
-          
-          {report.tags && report.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
-              {report.tags.map(tag => (
-                <Badge key={tag} variant="outline" className="text-xs bg-muted/50">{tag}</Badge>
-              ))}
-            </div>
-          )}
         </CardContent>
         <CardFooter className="pt-0 text-xs text-muted-foreground flex items-center gap-3">
           {report.hasFeedback ? (

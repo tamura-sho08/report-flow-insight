@@ -95,6 +95,20 @@ const ReportDetail: React.FC<ReportDetailProps> = ({
               <CardTitle className="text-xl">{report.title}</CardTitle>
               <CardDescription>
                 提出日: {report.date}
+                {report.author && (
+                  <div className="mt-1 flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={report.author.avatar} alt={report.author.name} />
+                      <AvatarFallback>{report.author.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm">{report.author.name}</span>
+                    {report.author.department && (
+                      <span className="text-sm text-muted-foreground">
+                        • {report.author.department}
+                      </span>
+                    )}
+                  </div>
+                )}
               </CardDescription>
             </div>
             
