@@ -1,15 +1,14 @@
-
 import React, { useState, useMemo } from 'react';
 import ReportCard, { Report } from '@/components/reports/ReportCard';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { 
   Search, 
-  Filter, 
+  Filter,
   SortAsc, 
-  SortDesc, 
-  Calendar 
+  SortDesc,
+  PlusCircle
 } from 'lucide-react';
 import {
   Select,
@@ -95,46 +94,30 @@ const enhancedReports = allReports.map((report, index) => ({
 
 const Reports: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('my-reports');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [filterTag, setFilterTag] = useState<string | null>(null);
-
-  // タグの一覧を取得
-  const allTags = useMemo(() => {
-    const tags = new Set<string>();
-    enhancedReports.forEach(report => {
-      report.tags?.forEach(tag => tags.add(tag));
-    });
-    return Array.from(tags);
-  }, []);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'read' | 'unread'>('all');
 
   // 絞り込まれたレポートを取得
   const filteredReports = useMemo(() => {
-    // 自分/他者の日報でフィルタリング
-    let filtered = enhancedReports.filter(report => {
-      if (activeTab === 'my-reports') {
-        return report.authorId === user?.id || report.authorId === '1'; // 自分の日報
-      } else if (activeTab === 'team-reports') {
-        return report.authorId !== user?.id && report.authorId !== '1'; // 他者の日報
-      }
-      return true; // その他のタブ（全て、未読、フィードバック）は通常通り
-    });
+    // 自分の日報のみ表示
+    let filtered = enhancedReports.filter(report => 
+      report.authorId === user?.id || report.authorId === '1'
+    );
 
     // 検索語でフィルタリング
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(report => 
         report.title.toLowerCase().includes(term) || 
-        report.content.toLowerCase().includes(term) ||
-        (report.tags && report.tags.some(tag => tag.toLowerCase().includes(term)))
+        report.content.toLowerCase().includes(term)
       );
     }
 
-    // タグでフィルタリング
-    if (filterTag) {
+    // 既読/未読でフィルタリング
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(report => 
-        report.tags && report.tags.includes(filterTag)
+        statusFilter === 'read' ? report.isRead : !report.isRead
       );
     }
 
@@ -146,17 +129,13 @@ const Reports: React.FC = () => {
     });
 
     return filtered;
-  }, [searchTerm, sortOrder, filterTag, activeTab, user?.id]);
-
-  // 未読とフィードバックのレポートをフィルタリング
-  const unreadReports = filteredReports.filter(report => !report.isRead);
-  const feedbackReports = filteredReports.filter(report => report.hasFeedback);
+  }, [searchTerm, sortOrder, statusFilter, user?.id]);
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">日報一覧</h1>
-        <p className="text-muted-foreground">日報の一覧です。</p>
+        <h1 className="text-2xl font-bold tracking-tight">自分の日報一覧</h1>
+        <p className="text-muted-foreground">あなたが提出した日報の一覧です。</p>
       </div>
 
       {/* 検索とフィルタリングコントロール */}
@@ -172,18 +151,20 @@ const Reports: React.FC = () => {
         </div>
         
         <div className="flex gap-2">
-          <Select value={filterTag || undefined} onValueChange={setFilterTag}>
+          <Select value={statusFilter} onValueChange={(value: 'all' | 'read' | 'unread') => setStatusFilter(value)}>
             <SelectTrigger className="w-[180px]">
               <div className="flex items-center">
                 <Filter className="h-4 w-4 mr-2" />
-                <span>{filterTag || "タグでフィルタ"}</span>
+                <span>
+                  {statusFilter === 'all' ? 'すべて' : 
+                   statusFilter === 'read' ? '既読' : '未読'}
+                </span>
               </div>
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">すべてのタグ</SelectItem>
-              {allTags.map(tag => (
-                <SelectItem key={tag} value={tag}>{tag}</SelectItem>
-              ))}
+              <SelectItem value="all">すべて</SelectItem>
+              <SelectItem value="read">既読</SelectItem>
+              <SelectItem value="unread">未読</SelectItem>
             </SelectContent>
           </Select>
           
@@ -197,71 +178,28 @@ const Reports: React.FC = () => {
           </Button>
         </div>
       </div>
-      
-      <Tabs defaultValue="my-reports" className="space-y-4" onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="my-reports">自分の日報</TabsTrigger>
-          <TabsTrigger value="team-reports">チームの日報</TabsTrigger>
-          <TabsTrigger value="unread">未読 ({unreadReports.length})</TabsTrigger>
-          <TabsTrigger value="feedback">フィードバックあり ({feedbackReports.length})</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="my-reports" className="space-y-4">
-          {filteredReports.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {filteredReports.map((report) => (
-                <ReportCard key={report.id} report={report} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <p>該当する日報はありません</p>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="team-reports" className="space-y-4">
-          {filteredReports.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {filteredReports.map((report) => (
-                <ReportCard key={report.id} report={report} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <p>該当する日報はありません</p>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="unread" className="space-y-4">
-          {unreadReports.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {unreadReports.map((report) => (
-                <ReportCard key={report.id} report={report} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <p>未読の日報はありません</p>
-            </div>
-          )}
-        </TabsContent>
-        
-        <TabsContent value="feedback" className="space-y-4">
-          {feedbackReports.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {feedbackReports.map((report) => (
-                <ReportCard key={report.id} report={report} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <p>フィードバックのある日報はありません</p>
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+
+      {/* レポート一覧 */}
+      {filteredReports.length > 0 ? (
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {filteredReports.map((report) => (
+            <ReportCard key={report.id} report={report} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>該当する日報はありません</p>
+        </div>
+      )}
+
+      {/* フローティングアクションボタン */}
+      <div className="fixed right-6 bottom-6">
+        <Link to="/create-report">
+          <Button className="h-14 w-14 rounded-full shadow-lg" size="icon">
+            <PlusCircle className="h-6 w-6" />
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
