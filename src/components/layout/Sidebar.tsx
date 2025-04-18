@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   FileText, 
@@ -10,8 +10,12 @@ import {
   ChevronLeft, 
   Users, 
   Settings,
-  UserCog 
+  UserCog,
+  LogOut,
+  User
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 
 interface SidebarProps {
   isMobile: boolean;
@@ -20,9 +24,16 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
+  };
+  
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
   
   const navItems = [
@@ -48,6 +59,24 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
         </button>
       </div>
       
+      {/* ユーザー情報 */}
+      {user && (
+        <div className={`px-4 py-3 border-b border-sidebar-border ${isCollapsed ? 'text-center' : ''}`}>
+          {isCollapsed ? (
+            <div className="flex justify-center">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white">
+                <User size={16} />
+              </div>
+            </div>
+          ) : (
+            <div className="text-white">
+              <div className="font-medium">{user.name}</div>
+              <div className="text-xs text-white/70">{user.department}</div>
+            </div>
+          )}
+        </div>
+      )}
+      
       <div className="flex-1 py-6 overflow-y-auto">
         <nav className="px-2 space-y-1">
           {navItems.map((item) => (
@@ -63,22 +92,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
         </nav>
       </div>
       
-      <div className="p-4">
+      <div className="p-4 space-y-3">
         {!isCollapsed ? (
-          <Link
-            to="/create-report"
-            className="bg-white text-sidebar w-full py-2 px-4 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-white/90 transition-colors"
-          >
-            <PlusCircle size={18} />
-            新規日報作成
-          </Link>
+          <>
+            <Link
+              to="/create-report"
+              className="bg-white text-sidebar w-full py-2 px-4 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-white/90 transition-colors"
+            >
+              <PlusCircle size={18} />
+              新規日報作成
+            </Link>
+            
+            <Button 
+              variant="outline" 
+              className="w-full bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+              onClick={handleLogout}
+            >
+              <LogOut size={18} className="mr-2" />
+              ログアウト
+            </Button>
+          </>
         ) : (
-          <Link
-            to="/create-report"
-            className="bg-white text-sidebar w-full h-10 rounded-md flex items-center justify-center hover:bg-white/90 transition-colors"
-          >
-            <PlusCircle size={20} />
-          </Link>
+          <>
+            <Link
+              to="/create-report"
+              className="bg-white text-sidebar w-full h-10 rounded-md flex items-center justify-center hover:bg-white/90 transition-colors"
+            >
+              <PlusCircle size={20} />
+            </Link>
+            
+            <Button
+              variant="outline"
+              className="w-full h-10 bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white"
+              onClick={handleLogout}
+            >
+              <LogOut size={20} />
+            </Button>
+          </>
         )}
       </div>
     </div>
