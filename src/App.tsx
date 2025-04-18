@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import TeamMember from "@/pages/TeamMember";
 import Notifications from "@/pages/Notifications";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/NotFound";
+import UserManagement from "@/pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +33,7 @@ const App = () => (
             <Route path="/team/:id" element={<TeamMember />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/user-management" element={<UserManagement />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

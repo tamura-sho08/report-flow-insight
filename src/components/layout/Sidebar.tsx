@@ -9,7 +9,8 @@ import {
   Menu, 
   ChevronLeft, 
   Users, 
-  Settings 
+  Settings,
+  UserCog 
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -29,6 +30,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
     { path: '/reports', icon: <FileText size={20} />, label: '日報一覧' },
     { path: '/team', icon: <Users size={20} />, label: 'チーム' },
     { path: '/notifications', icon: <Bell size={20} />, label: 'お知らせ' },
+    { path: '/user-management', icon: <UserCog size={20} />, label: 'ユーザー管理' },
     { path: '/settings', icon: <Settings size={20} />, label: '設定' },
   ];
   
