@@ -1,22 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import ReportCard, { Report } from '@/components/reports/ReportCard';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { 
-  Search, 
-  Filter,
-  SortAsc, 
-  SortDesc,
-  PlusCircle
-} from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Report } from '@/components/reports/ReportCard';
+import ReportSearch from '@/components/reports/ReportSearch';
+import ReportList from '@/components/reports/ReportList';
+import CreateReportButton from '@/components/reports/CreateReportButton';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Mocked data
@@ -138,68 +124,18 @@ const Reports: React.FC = () => {
         <p className="text-muted-foreground">あなたが提出した日報の一覧です。</p>
       </div>
 
-      {/* 検索とフィルタリングコントロール */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="検索..."
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <div className="flex gap-2">
-          <Select value={statusFilter} onValueChange={(value: 'all' | 'read' | 'unread') => setStatusFilter(value)}>
-            <SelectTrigger className="w-[180px]">
-              <div className="flex items-center">
-                <Filter className="h-4 w-4 mr-2" />
-                <span>
-                  {statusFilter === 'all' ? 'すべて' : 
-                   statusFilter === 'read' ? '既読' : '未読'}
-                </span>
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">すべて</SelectItem>
-              <SelectItem value="read">既読</SelectItem>
-              <SelectItem value="unread">未読</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            title={sortOrder === 'asc' ? '新しい順に並べ替え' : '古い順に並べ替え'}
-          >
-            {sortOrder === 'asc' ? <SortAsc className="h-4 w-4" /> : <SortDesc className="h-4 w-4" />}
-          </Button>
-        </div>
-      </div>
+      <ReportSearch
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        sortOrder={sortOrder}
+        onSortOrderChange={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+      />
 
-      {/* レポート一覧 */}
-      {filteredReports.length > 0 ? (
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {filteredReports.map((report) => (
-            <ReportCard key={report.id} report={report} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-8 text-muted-foreground">
-          <p>該当する日報はありません</p>
-        </div>
-      )}
-
-      {/* フローティングアクションボタン */}
-      <div className="fixed right-6 bottom-6">
-        <Link to="/create-report">
-          <Button className="h-14 w-14 rounded-full shadow-lg" size="icon">
-            <PlusCircle className="h-6 w-6" />
-          </Button>
-        </Link>
-      </div>
+      <ReportList reports={filteredReports} />
+      
+      <CreateReportButton />
     </div>
   );
 };
