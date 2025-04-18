@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { 
+import {
   Table,
   TableBody,
   TableCell,
@@ -73,9 +73,9 @@ const TeamMembersTable: React.FC<TeamMembersTableProps> = ({ members }) => {
                 <Link to={`/team/${member.id}`} className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-primary/10 mr-2 flex items-center justify-center">
                     {member.avatar ? (
-                      <img 
-                        src={member.avatar} 
-                        alt={member.name} 
+                      <img
+                        src={member.avatar}
+                        alt={member.name}
                         className="w-8 h-8 rounded-full object-cover"
                       />
                     ) : (
@@ -98,8 +98,8 @@ const TeamMembersTable: React.FC<TeamMembersTableProps> = ({ members }) => {
               <TableCell>
                 <div className="flex items-center">
                   <div className="w-full max-w-[80px] bg-gray-200 rounded-full h-2 mr-2">
-                    <div 
-                      className="bg-primary h-2 rounded-full" 
+                    <div
+                      className="bg-primary h-2 rounded-full"
                       style={{ width: `${member.submissionRate}%` }}
                     ></div>
                   </div>
@@ -110,7 +110,7 @@ const TeamMembersTable: React.FC<TeamMembersTableProps> = ({ members }) => {
                 <div>
                   {getSentimentIcon(member.sentiment)}
                   <span className={`text-sentiment-${member.sentiment}`}>
-                    {member.sentiment === 'positive' ? '前向き' : 
+                    {member.sentiment === 'positive' ? '前向き' :
                       member.sentiment === 'neutral' ? '普通' : '要注意'}
                   </span>
                 </div>

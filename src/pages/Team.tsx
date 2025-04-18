@@ -85,7 +85,7 @@ const Team: React.FC = () => {
         <h1 className="text-2xl font-bold tracking-tight">チームメンバー</h1>
         <p className="text-muted-foreground">チームメンバーの日報提出状況を確認できます。</p>
       </div>
-      
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {teamMembers.map((member) => (
           <Link key={member.id} to={`/team/${member.id}`}>
@@ -98,28 +98,29 @@ const Team: React.FC = () => {
                     </Avatar>
                     <div>
                       <CardTitle className="text-lg">{member.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{member.position}</p>
+                      {/* <p className="text-sm text-muted-foreground">{member.position}</p> */}
                     </div>
                   </div>
-                  
-                  <Badge className={getSentimentColor(member.sentiment)}>
+
+                  {/* <Badge className={getSentimentColor(member.sentiment)}>
                     {getSentimentText(member.sentiment)}
-                  </Badge>
+                  </Badge> */}
                 </div>
               </CardHeader>
-              
+
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">部署</span>
-                    <span>{member.department}</span>
+                  <div className='mt-2'>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground" style={{ minWidth: "6em" }}>部署</span>
+                      <span>{member.department}</span>
+                    </div>
+                    <div className="flex justify-between text-sm mt-1">
+                      <span className="text-muted-foreground" style={{ minWidth: "6em" }}>最終提出日</span>
+                      <span>{member.lastSubmissionDate}</span>
+                    </div>
                   </div>
-                  
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">最終提出日</span>
-                    <span>{member.lastSubmissionDate}</span>
-                  </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2 pt-2">
                     <div className="flex flex-col items-center justify-center p-2 bg-muted/30 rounded-md">
                       <div className="flex items-center text-primary">
@@ -128,7 +129,7 @@ const Team: React.FC = () => {
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">提出数</p>
                     </div>
-                    
+
                     <div className="flex flex-col items-center justify-center p-2 bg-muted/30 rounded-md">
                       <div className="flex items-center text-primary">
                         <MessageSquare className="h-4 w-4 mr-1" />

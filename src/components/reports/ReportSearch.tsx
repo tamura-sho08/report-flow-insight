@@ -3,13 +3,13 @@ import React from 'react';
 import { Search, Filter, SortAsc, SortDesc } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 
 interface ReportSearchProps {
   searchTerm: string;
@@ -39,9 +39,9 @@ const ReportSearch: React.FC<ReportSearchProps> = ({
           onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
-      
+
       <div className="flex gap-2">
-        <Select value={statusFilter} onValueChange={onStatusFilterChange}>
+        {/* <Select value={statusFilter} onValueChange={onStatusFilterChange}>
           <SelectTrigger className="w-[180px]">
             <div className="flex items-center">
               <Filter className="h-4 w-4 mr-2" />
@@ -53,8 +53,8 @@ const ReportSearch: React.FC<ReportSearchProps> = ({
             <SelectItem value="read">既読</SelectItem>
             <SelectItem value="unread">未読</SelectItem>
           </SelectContent>
-        </Select>
-        
+        </Select> */}
+
         <Button
           variant="outline"
           size="icon"

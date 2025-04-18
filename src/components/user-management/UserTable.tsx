@@ -25,20 +25,20 @@ const UserTable = () => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>名前</TableHead>
-          <TableHead>メールアドレス</TableHead>
           <TableHead>権限</TableHead>
           <TableHead>部署</TableHead>
+          <TableHead>名前</TableHead>
+          <TableHead>メールアドレス</TableHead>
           <TableHead>操作</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {mockUsers.map((user) => (
           <TableRow key={user.id}>
-            <TableCell>{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
             <TableCell>{user.role}</TableCell>
             <TableCell>{user.department}</TableCell>
+            <TableCell>{user.name}</TableCell>
+            <TableCell>{user.email}</TableCell>
             <TableCell>
               <div className="flex space-x-2">
                 <Dialog>

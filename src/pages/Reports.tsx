@@ -14,7 +14,6 @@ const allReports: Report[] = [
     content: 'プロジェクトAの要件定義が完了し、設計フェーズに入りました。チームメンバーとの打ち合わせを実施し、今後のスケジュールを確認しました。',
     hasFeedback: true,
     isRead: true,
-    tags: ['プロジェクトA', '要件定義']
   },
   {
     id: '2',
@@ -23,7 +22,6 @@ const allReports: Report[] = [
     content: '週次ミーティングでは、各メンバーの進捗状況と課題を共有しました。プロジェクトBの遅延について対策を協議し、リソースの再配分を決定しました。',
     hasFeedback: false,
     isRead: false,
-    tags: ['ミーティング', '週次報告']
   },
   {
     id: '3',
@@ -32,7 +30,6 @@ const allReports: Report[] = [
     content: 'クライアントAと要件確認の打ち合わせを実施しました。追加要件が発生し、スケジュールの調整が必要になりました。詳細は添付資料を参照してください。',
     hasFeedback: true,
     isRead: true,
-    tags: ['クライアントA', '要件確認']
   },
   {
     id: '4',
@@ -41,7 +38,6 @@ const allReports: Report[] = [
     content: '昨日発生したシステム障害の原因特定と対応を行いました。原因はデータベースのコネクション不足によるものでした。今後の対策としてモニタリング強化を提案します。',
     hasFeedback: false,
     isRead: true,
-    tags: ['障害対応', 'システム運用']
   },
   {
     id: '5',
@@ -50,7 +46,6 @@ const allReports: Report[] = [
     content: 'プロジェクト管理研修に参加しました。アジャイル開発の実践的なワークショップがあり、チーム内での活用方法について学びました。',
     hasFeedback: true,
     isRead: false,
-    tags: ['研修', 'スキルアップ']
   },
   {
     id: '6',
@@ -59,7 +54,6 @@ const allReports: Report[] = [
     content: '新機能Xの開発を進めています。基本的な機能実装は完了し、現在テスト中です。来週中にはリリース可能な見込みです。',
     hasFeedback: false,
     isRead: true,
-    tags: ['開発', '新機能']
   },
   {
     id: '7',
@@ -68,7 +62,6 @@ const allReports: Report[] = [
     content: 'メンバーBのコードレビューを実施しました。いくつかの改善点を指摘し、修正が必要です。詳細なフィードバックはGitHubのプルリクエストに記載しています。',
     hasFeedback: true,
     isRead: true,
-    tags: ['コードレビュー', '品質管理']
   },
 ];
 
@@ -87,25 +80,25 @@ const Reports: React.FC = () => {
   // 絞り込まれたレポートを取得
   const filteredReports = useMemo(() => {
     // 自分の日報のみ表示
-    let filtered = enhancedReports.filter(report => 
+    let filtered = enhancedReports.filter(report =>
       report.authorId === user?.id || report.authorId === '1'
     );
 
     // 検索語でフィルタリング
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(report => 
-        report.title.toLowerCase().includes(term) || 
+      filtered = filtered.filter(report =>
+        report.date.toLowerCase().includes(term) ||
         report.content.toLowerCase().includes(term)
       );
     }
 
-    // 既読/未読でフィルタリング
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(report => 
-        statusFilter === 'read' ? report.isRead : !report.isRead
-      );
-    }
+    // // 既読/未読でフィルタリング
+    // if (statusFilter !== 'all') {
+    //   filtered = filtered.filter(report =>
+    //     statusFilter === 'read' ? report.isRead : !report.isRead
+    //   );
+    // }
 
     // 日付で並べ替え
     filtered.sort((a, b) => {
@@ -134,7 +127,7 @@ const Reports: React.FC = () => {
       />
 
       <ReportList reports={filteredReports} />
-      
+
       <CreateReportButton />
     </div>
   );

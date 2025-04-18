@@ -23,17 +23,18 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, className }) => {
   return (
     <Link to={`/reports/${report.id}`}>
       <Card className={cn(
-        "overflow-hidden transition-all hover:shadow-md", 
+        "overflow-hidden transition-all hover:shadow-md",
         !report.isRead ? "border-l-4 border-l-blue-500" : "",
-        className
+        className = "min-h-full"
       )}>
         <CardHeader className="pb-3">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col justify-between items-start">
             <CardTitle className="text-lg flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              {report.title}
+              {/* <FileText className="h-4 w-4" />
+              {report.title} */}
+              <div className="text-base">{report.date}</div>
             </CardTitle>
-            <div className="text-xs text-muted-foreground">{report.date}</div>
+            {/* <div className="text-base">{report.date}</div> */}
           </div>
         </CardHeader>
         <CardContent>
@@ -51,7 +52,7 @@ const ReportCard: React.FC<ReportCardProps> = ({ report, className }) => {
               フィードバックなし
             </span>
           )}
-          
+
           {report.isRead && (
             <span className="flex items-center gap-1 text-blue-600">
               <CheckCircle2 className="h-3 w-3" />
